@@ -1,6 +1,16 @@
-require "ast"
-require "sql/version"
+require 'ast'
+
+require 'sql/processor'
+require 'sql/version'
 
 module SQL
-  # Your code goes here...
+  module NodeHelper
+    def s(type, *children)
+      ::AST::Node.new(type, children)
+    end
+  end
+
+  def self.[](ast)
+    Processor.call(ast)
+  end
 end
