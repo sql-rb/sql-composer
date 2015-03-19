@@ -1,8 +1,47 @@
-# Sql.rb
+# SQL.rb (WIP/PoC)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/sql.rb`. To experiment with that code, run `bin/console` for an interactive prompt.
+A set of tools to generate SQL using AST transformations.
 
-TODO: Delete this and the text above, and describe your gem
+The goal of this project is to provide a foundation for generating SQL that is
+reusable for other Ruby libraries that need to translate their SQL-representation
+into SQL strings.
+
+The idea is that SQL.rb ships with its own AST and a couple of tools to help
+working with this AST.
+
+In example ActiveRecord **could do this**:
+
+``` ruby
+ar_ast = User.select(:id, :name).where(name: 'Jane').to_ast
+# s(:select,
+#   s(:fields, :id, :name),
+#   s(:from, 'users'),
+#   s(:where,
+#     s(:name, s(:eq, 'Jane'))
+#   )
+# )
+
+sql_ast = ActiveRecord::SQL.call(User, ar_ast)
+# s(:select,
+#   s(:fields,
+#     s(:id, 'id'), s(:id, 'name')
+#   ),
+#   s(:id, 'users'),
+#   s(:where,
+#     s(:eq, s(:id, 'name'), s(:string, 'Jane'))
+#   )
+# )
+
+SQL[sql_ast]
+# => SELECT "id", "name" FROM "users" WHERE "name" = 'Jane'
+```
+
+This project is in a PoC state and is heavily based on the experience and actual
+code written initially for [ROM](https://github.com/rom-rb), specifically:
+
+* [dkubb/sql](https://github.com/dkubb/sql) - ast-based pure sql generator/parser
+* [solnic/axiom-sql-generator](https://github.com/solnic/axiom-sql-generator) - which was an attempt to translate axiom ast into sql ast
+* a ton of ast-processing-related work done by [mbj](https://github.com/mbj) for unparser and mutant gems
 
 ## Installation
 
@@ -32,7 +71,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/sql.rb/fork )
+1. Fork it ( https://github.com/solnic/sql.rb/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
