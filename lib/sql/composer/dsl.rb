@@ -21,7 +21,7 @@ module SQL
       end
 
       def method_missing(name, *args)
-        ast << [name, *args]
+        ast << [name.to_s.downcase, *args]
         self
       end
     end

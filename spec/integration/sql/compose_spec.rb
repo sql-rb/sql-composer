@@ -26,9 +26,9 @@ RSpec.describe SQL, ".compose" do
     context "without ORDER" do
       specify do
         result = build { |users|
-          select users.id, users.name
-            from users.table
-            where users.name == "Jane"
+          SELECT users.id, users.name
+            FROM users.table
+            WHERE users.name == "Jane"
         }
 
         expect(result.to_s).to eql(
@@ -44,10 +44,10 @@ RSpec.describe SQL, ".compose" do
     context "with ORDER" do
       specify do
         result = build { |users|
-          select users.id, users.name
-            from users.table
-            where users.name == "Jane"
-            order users.id.desc
+          SELECT users.id, users.name
+            FROM users.table
+            WHERE users.name == "Jane"
+            ORDER users.id.desc
         }
 
         expect(result.to_s).to eql(
