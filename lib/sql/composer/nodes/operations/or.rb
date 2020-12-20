@@ -4,20 +4,15 @@ module SQL
   module Composer
     module Nodes
       module Operations
-        class Eql
+        class Or
           attr_reader :left, :right
 
           def initialize(left, right)
             @left, @right = left, right
           end
 
-          def or(other)
-            Operations::Or.new(self, other)
-          end
-          alias_method :OR, :or
-
           def to_s
-            "#{left.to_s} == #{right.to_s}"
+            "(#{left.to_s}) OR (#{right.to_s})"
           end
         end
       end
