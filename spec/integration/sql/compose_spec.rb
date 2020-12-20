@@ -22,19 +22,43 @@ RSpec.describe SQL, ".compose" do
     SQL.compose(backend: :postgres, args: UsersRelation.new, &block)
   end
 
-  it "works" do
-    result = build { |users|
-      select users.id, users.name
-        from users.table
-        where users.name == "Jane"
-    }
+  describe "SELECT" do
+    context "without ORDER" do
+      specify do
+        result = build { |users|
+          select users.id, users.name
+            from users.table
+            where users.name == "Jane"
+        }
 
-    expect(result.to_s).to eql(
-      <<~SQL.strip
-      SELECT "users"."id", "users"."name"
-      FROM "users"
-      WHERE "users"."name" == 'Jane'
-      SQL
-    )
+        expect(result.to_s).to eql(
+          <<~SQL.strip
+          SELECT "users"."id", "users"."name"
+          FROM "users"
+          WHERE "users"."name" == 'Jane'
+          SQL
+        )
+      end
+    end
+
+    context "with ORDER" do
+      specify do
+        result = build { |users|
+          select users.id, users.name
+            from users.table
+            where users.name == "Jane"
+            order users.id.desc
+        }
+
+        expect(result.to_s).to eql(
+          <<~SQL.strip
+          SELECT "users"."id", "users"."name"
+          FROM "users"
+          WHERE "users"."name" == 'Jane'
+          ORDER BY "users"."id" DESC
+          SQL
+        )
+      end
+    end
   end
 end

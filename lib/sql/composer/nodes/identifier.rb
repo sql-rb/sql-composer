@@ -14,6 +14,14 @@ module SQL
           qualify? ? [qualifier, quote(name)].map(&:to_s).join(".") : quote(name)
         end
 
+        def asc
+          Operations::Asc.new(self)
+        end
+
+        def desc
+          Operations::Desc.new(self)
+        end
+
         def qualifier
           fetch(:qualifier)
         end

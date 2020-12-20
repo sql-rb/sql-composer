@@ -40,6 +40,10 @@ module SQL
         add_node(Nodes::Where, operations: node)
       end
 
+      def visit_order(node)
+        add_node(Nodes::Order, operations: node)
+      end
+
       private
 
       def add_node(klass, options)
