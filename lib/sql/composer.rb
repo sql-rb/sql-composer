@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sql/Composer/dsl"
+require "sql/composer/dsl"
 
 module SQL
   def self.compose(options, &block)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sql/Composer/nodes/core"
+require "sql/composer/nodes/core"
 
 module SQL
   module Composer
