@@ -8,6 +8,7 @@ gemspec
 gem "rake"
 
 group :tools do
+  gem "pry", platforms: :mri
   gem "byebug", platforms: :mri
   gem "rubocop", "~> 1.6"
 end
