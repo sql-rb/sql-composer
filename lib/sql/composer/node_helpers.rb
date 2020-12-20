@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "sql/builder/nodes"
+require "sql/Composer/nodes"
 
 module SQL
-  module Builder
+  module Composer
     module NodeHelpers
       def sql_identifier(name, options = {})
         Nodes::Identifier.new(options.merge(name: name))

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
-require "sql/builder"
+require "sql/composer"
 
 require "pry"
 Pry.start

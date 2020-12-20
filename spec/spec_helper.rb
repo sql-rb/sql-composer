@@ -2,8 +2,8 @@
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 
-require "sql/builder"
-require "sql/builder/node_helpers"
+require "sql/composer"
+require "sql/composer/node_helpers"
 
 begin
   require "byebug"
@@ -11,5 +11,5 @@ rescue LoadError
 end
 
 RSpec.configure do |config|
-  config.include(SQL::Builder::NodeHelpers)
+  config.include(SQL::Composer::NodeHelpers)
 end

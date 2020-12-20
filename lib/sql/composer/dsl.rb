@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "sql/builder/compiler"
+require "sql/Composer/compiler"
 
 module SQL
-  module Builder
+  module Composer
     class DSL < BasicObject
       attr_reader :options
 

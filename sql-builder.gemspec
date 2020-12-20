@@ -2,11 +2,11 @@
 
 lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "sql/builder/version"
+require "sql/composer/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "sql-builder"
-  spec.version       = SQL::Builder::VERSION
+  spec.name          = "sql-composer"
+  spec.version       = SQL::Composer::VERSION
   spec.authors       = ["Piotr Solnica"]
   spec.email         = ["piotr.solnica@gmail.com"]
 

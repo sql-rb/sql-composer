@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module SQL
-  module Builder
+  module Composer
     module Nodes
       class Core
         attr_reader :options

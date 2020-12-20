@@ -2,19 +2,19 @@
 
 RSpec.describe SQL, ".build" do
   class UsersRelation
-    include SQL::Builder::NodeHelpers
+    include SQL::Composer::NodeHelpers
 
     def qualifier
-      sql_identifier(:users, backend: SQL::Builder.backends[:postgres])
+      sql_identifier(:users, backend: SQL::Composer.backends[:postgres])
     end
     alias_method :table, :qualifier
 
     def id
-      sql_identifier(:id, qualifier: qualifier, backend: SQL::Builder.backends[:postgres])
+      sql_identifier(:id, qualifier: qualifier, backend: SQL::Composer.backends[:postgres])
     end
 
     def name
-      sql_identifier(:name, qualifier: qualifier, backend: SQL::Builder.backends[:postgres])
+      sql_identifier(:name, qualifier: qualifier, backend: SQL::Composer.backends[:postgres])
     end
   end
 

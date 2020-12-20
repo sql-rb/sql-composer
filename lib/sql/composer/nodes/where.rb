@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "sql/builder/nodes/core"
+require "sql/Composer/nodes/core"
 
 module SQL
-  module Builder
+  module Composer
     module Nodes
       class Where < Core
         def operations

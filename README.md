@@ -1,3 +1,3 @@
-# sql-builder
+# sql-composer
 
 TODO

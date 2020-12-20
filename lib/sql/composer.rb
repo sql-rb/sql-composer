@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require "sql/builder/dsl"
+require "sql/Composer/dsl"
 
 module SQL
   def self.build(options, &block)
-    backend = Builder.backends[options[:backend]]
+    backend = Composer.backends[options[:backend]]
     args = options[:args]
-    Builder::DSL.new(args: args, backend: backend, &block).()
+    Composer::DSL.new(args: args, backend: backend, &block).()
   end
 
-  module Builder
+  module Composer
     def self.backends
       @backends ||= {}
     end
