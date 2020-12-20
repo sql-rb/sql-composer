@@ -23,6 +23,40 @@ RSpec.describe SQL, ".compose" do
   end
 
   describe "SELECT" do
+    context "without WHERE" do
+      specify do
+        result = build { |users|
+          SELECT users.id, users.name
+            FROM users.table
+        }
+
+        expect(result.to_s).to eql(
+          <<~SQL.strip
+          SELECT "users"."id", "users"."name"
+          FROM "users"
+          SQL
+        )
+      end
+    end
+
+    context "with WHERE" do
+      specify do
+        result = build { |users|
+          SELECT users.id, users.name
+            FROM users.table
+            WHERE users.name == "Jane"
+        }
+
+        expect(result.to_s).to eql(
+          <<~SQL.strip
+          SELECT "users"."id", "users"."name"
+          FROM "users"
+          WHERE "users"."name" == 'Jane'
+          SQL
+        )
+      end
+    end
+
     context "without ORDER" do
       specify do
         result = build { |users|
