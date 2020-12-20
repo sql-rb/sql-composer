@@ -15,9 +15,20 @@ module SQL
     end
 
     module Backends
+      InputTypeNotSupported = Class.new(StandardError)
+
       class Postgres
         def quote(identifier)
           %("#{identifier.to_s}")
+        end
+
+        def escape(input)
+          case input
+          when String
+            %('#{input}')
+          else
+            raise InputTypeNotSupported, input.class
+          end
         end
       end
     end

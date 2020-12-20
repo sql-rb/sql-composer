@@ -24,7 +24,7 @@ module SQL
 
         # this is probably a stupid idea lol
         def ==(other)
-          Operations::Eql.new(self, other)
+          Operations::Eql.new(self, Nodes::Value.new(input: other, backend: backend))
         end
       end
     end

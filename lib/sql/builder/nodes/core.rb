@@ -16,8 +16,6 @@ module SQL
 
         def backend
           fetch(:backend)
-        rescue => err
-          byebug
         end
 
         def quote(identifier)
