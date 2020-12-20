@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe SQL, ".build" do
+RSpec.describe SQL, ".compose" do
   class UsersRelation
     include SQL::Composer::NodeHelpers
 
@@ -19,7 +19,7 @@ RSpec.describe SQL, ".build" do
   end
 
   def build(&block)
-    SQL.build(backend: :postgres, args: UsersRelation.new, &block)
+    SQL.compose(backend: :postgres, args: UsersRelation.new, &block)
   end
 
   it "works" do

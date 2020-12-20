@@ -3,7 +3,7 @@
 require "sql/Composer/dsl"
 
 module SQL
-  def self.build(options, &block)
+  def self.compose(options, &block)
     backend = Composer.backends[options[:backend]]
     args = options[:args]
     Composer::DSL.new(args: args, backend: backend, &block).()
