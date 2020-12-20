@@ -5,8 +5,8 @@ require "sql/builder/nodes"
 module SQL
   module Builder
     module NodeHelpers
-      def sql_identifier(name)
-        Nodes::Identifier.new(name)
+      def sql_identifier(name, options = {})
+        Nodes::Identifier.new(options.merge(name: name))
       end
     end
   end

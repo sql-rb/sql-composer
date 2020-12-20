@@ -3,9 +3,12 @@
 module SQL
   module Builder
     class Compiler
+      attr_reader :backend
+
       attr_reader :nodes
 
-      def initialize
+      def initialize(backend)
+        @backend = backend
         @nodes = []
       end
 
@@ -25,18 +28,22 @@ module SQL
       end
 
       def visit_from(node)
-        name, _ = node
-        nodes << Nodes::From.new(name)
-        self
+        source, _ = node
+        add_node(Nodes::From, source: source)
       end
 
-      def visit_select(names)
-        nodes << Nodes::Select.new(names)
-        self
+      def visit_select(nodes)
+        add_node(Nodes::Select, identifiers: nodes)
       end
 
-      def visit_where(ops)
-        nodes << Nodes::Where.new(ops)
+      def visit_where(node)
+        add_node(Nodes::Where, operations: node)
+      end
+
+      private
+
+      def add_node(klass, options)
+        nodes << klass.new(options.update(backend: backend))
         self
       end
     end
