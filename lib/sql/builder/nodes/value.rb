@@ -5,13 +5,13 @@ require "sql/builder/nodes/core"
 module SQL
   module Builder
     module Nodes
-      class Select < Core
-        def identifiers
-          fetch(:identifiers)
+      class Value < Core
+        def input
+          fetch(:input)
         end
 
         def to_s
-          "SELECT #{identifiers.map(&:to_s).join(', ')}"
+          backend.escape(input)
         end
       end
     end

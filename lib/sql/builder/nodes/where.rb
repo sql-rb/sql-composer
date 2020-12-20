@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
+require "sql/builder/nodes/core"
+
 module SQL
   module Builder
     module Nodes
-      class Where
-        attr_reader :ops
-
-        def initialize(ops)
-          @ops = ops
+      class Where < Core
+        def operations
+          fetch(:operations)
         end
 
         def to_s
-          "WHERE #{ops.map(&:to_s).join(' ')}"
+          "WHERE #{operations.map(&:to_s).join(' ')}"
         end
       end
     end

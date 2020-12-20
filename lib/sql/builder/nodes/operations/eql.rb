@@ -12,7 +12,7 @@ module SQL
           end
 
           def to_s
-            "#{left.to_s} == '#{right.to_s}'"
+            "#{left.to_s} == #{right.to_s}"
           end
         end
       end
