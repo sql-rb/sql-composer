@@ -57,6 +57,24 @@ RSpec.describe SQL, ".compose" do
       end
     end
 
+    context "with WHERE and two conditions" do
+      specify do
+        result = build { |users|
+          SELECT users.id, users.name
+            FROM users.table
+            WHERE (users.name == "Jane").OR(users.name == "Jade")
+        }
+
+        expect(result.to_s).to eql(
+          <<~SQL.strip
+          SELECT "users"."id", "users"."name"
+          FROM "users"
+          WHERE ("users"."name" == 'Jane') OR ("users"."name" == 'Jade')
+          SQL
+        )
+      end
+    end
+
     context "without ORDER" do
       specify do
         result = build { |users|
