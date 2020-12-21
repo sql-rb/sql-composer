@@ -2,6 +2,7 @@
 
 require "sql/composer/statement"
 require "sql/composer/tokens"
+require "sql/composer/nodes"
 
 module SQL
   module Composer
