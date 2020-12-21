@@ -45,6 +45,23 @@ RSpec.describe SQL, ".compose" do
       end
     end
 
+    context "inline syntax" do
+      let(:query) do
+        compose {
+          SELECT(`"users"."id"`, `"users"."name"`).FROM(`"users"`)
+        }
+      end
+
+      specify do
+        expect(result).to eql(
+          <<~SQL.strip
+            SELECT "users"."id", "users"."name"
+            FROM "users"
+          SQL
+        )
+      end
+    end
+
     context "without WHERE" do
       let(:query) do
         compose { |users|
