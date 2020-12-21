@@ -7,7 +7,7 @@ module SQL
     module Nodes
       class Value < Core
         def input
-          fetch(:input)
+          tokens.value(id, fetch(:input))
         end
 
         def to_s

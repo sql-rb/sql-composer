@@ -18,96 +18,134 @@ RSpec.describe SQL, ".compose" do
     end
   end
 
-  def build(&block)
+  def compose(&block)
     SQL.compose(backend: :postgres, args: UsersRelation.new, &block)
+  end
+
+  let(:result) do
+    query.to_s
   end
 
   describe "SELECT" do
     context "without WHERE" do
-      specify do
-        result = build { |users|
+      let(:query) do
+        compose { |users|
           SELECT users.id, users.name
-            FROM users.table
+          FROM users.table
         }
+      end
 
+      specify do
         expect(result.to_s).to eql(
           <<~SQL.strip
-          SELECT "users"."id", "users"."name"
-          FROM "users"
+            SELECT "users"."id", "users"."name"
+            FROM "users"
           SQL
         )
       end
     end
 
     context "with WHERE" do
-      specify do
-        result = build { |users|
+      let(:query) do
+        compose { |users|
           SELECT users.id, users.name
-            FROM users.table
-            WHERE users.name == "Jane"
+          FROM users.table
+          WHERE users.name == "Jane"
         }
+      end
 
-        expect(result.to_s).to eql(
+      specify do
+        expect(result).to eql(
           <<~SQL.strip
-          SELECT "users"."id", "users"."name"
-          FROM "users"
-          WHERE "users"."name" == 'Jane'
+            SELECT "users"."id", "users"."name"
+            FROM "users"
+            WHERE "users"."name" == 'Jane'
           SQL
         )
       end
     end
 
     context "with WHERE and two conditions" do
-      specify do
-        result = build { |users|
+      let(:query) do
+        compose { |users|
           SELECT users.id, users.name
-            FROM users.table
-            WHERE (users.name == "Jane").OR(users.name == "Jade")
+          FROM users.table
+          WHERE (users.name == "Jane").OR(users.name == "Jade")
         }
+      end
 
-        expect(result.to_s).to eql(
+      specify do
+        expect(result).to eql(
           <<~SQL.strip
-          SELECT "users"."id", "users"."name"
-          FROM "users"
-          WHERE ("users"."name" == 'Jane') OR ("users"."name" == 'Jade')
+            SELECT "users"."id", "users"."name"
+            FROM "users"
+            WHERE ("users"."name" == 'Jane') OR ("users"."name" == 'Jade')
+          SQL
+        )
+      end
+    end
+
+    context "with a dynamic WHERE" do
+      let(:query) do
+        compose { |users|
+          SELECT users.id, users.name
+          FROM users.table
+          WHERE users.name == "%name%"
+        }
+      end
+
+      let(:result) do
+        query.set(name: "Jane").to_s
+      end
+
+      specify do
+        expect(result).to eql(
+          <<~SQL.strip
+            SELECT "users"."id", "users"."name"
+            FROM "users"
+            WHERE "users"."name" == 'Jane'
           SQL
         )
       end
     end
 
     context "without ORDER" do
-      specify do
-        result = build { |users|
+      let(:query) do
+        compose { |users|
           SELECT users.id, users.name
-            FROM users.table
-            WHERE users.name == "Jane"
+          FROM users.table
+          WHERE users.name == "Jane"
         }
+      end
 
-        expect(result.to_s).to eql(
+      specify do
+        expect(result).to eql(
           <<~SQL.strip
-          SELECT "users"."id", "users"."name"
-          FROM "users"
-          WHERE "users"."name" == 'Jane'
+            SELECT "users"."id", "users"."name"
+            FROM "users"
+            WHERE "users"."name" == 'Jane'
           SQL
         )
       end
     end
 
     context "with ORDER" do
-      specify do
-        result = build { |users|
+      let(:query) do
+        compose { |users|
           SELECT users.id, users.name
-            FROM users.table
-            WHERE users.name == "Jane"
-            ORDER users.id.desc
+          FROM users.table
+          WHERE users.name == "Jane"
+          ORDER users.id.desc
         }
+      end
 
-        expect(result.to_s).to eql(
+      specify do
+        expect(result).to eql(
           <<~SQL.strip
-          SELECT "users"."id", "users"."name"
-          FROM "users"
-          WHERE "users"."name" == 'Jane'
-          ORDER BY "users"."id" DESC
+            SELECT "users"."id", "users"."name"
+            FROM "users"
+            WHERE "users"."name" == 'Jane'
+            ORDER BY "users"."id" DESC
           SQL
         )
       end

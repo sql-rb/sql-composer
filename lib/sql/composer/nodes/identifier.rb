@@ -32,7 +32,15 @@ module SQL
 
         # this is probably a stupid idea lol
         def ==(other)
-          Operations::Eql.new(self, Nodes::Value.new(input: other, backend: backend))
+          value = Nodes::Value.new(input: other, backend: backend)
+
+          operation = Operations::Eql.new(left: self, right: value)
+
+          if other.start_with?("%") && other.end_with?("%")
+            tokens.add(other, value)
+          end
+
+          operation
         end
       end
     end
