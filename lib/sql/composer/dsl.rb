@@ -4,6 +4,7 @@ require "dry/effects"
 
 require "sql/composer/compiler"
 require "sql/composer/tokens"
+require "sql/composer/nodes/literal"
 
 module SQL
   module Composer
@@ -30,6 +31,12 @@ module SQL
         compiler = Compiler.new(options.fetch(:backend), tokens: tokens)
         compiler.(ast)
       end
+
+      def `(value)
+        Nodes::Literal.new(value: value)
+      end
+
+      private
 
       def method_missing(name, *args)
         ast << [name.to_s.downcase, *args]

@@ -42,6 +42,10 @@ module SQL
         self
       end
 
+      def visit_literal(node)
+        add_node(Nodes::Literal, value: node[0])
+      end
+
       def visit_from(node)
         source, _ = node
         add_node(Nodes::From, source: source)

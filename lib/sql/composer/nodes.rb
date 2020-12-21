@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "sql/composer/nodes/literal"
 require "sql/composer/nodes/identifier"
 require "sql/composer/nodes/select"
 require "sql/composer/nodes/from"
