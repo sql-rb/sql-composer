@@ -33,7 +33,7 @@ module SQL
       end
 
       def `(value)
-        Nodes::Literal.new(value: value)
+        Nodes::Literal.new(value: value, backend: options[:backend])
       end
 
       private

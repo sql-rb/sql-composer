@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 require "sql/composer/nodes/core"
+require "sql/composer/nodes/operators"
+
 
 module SQL
   module Composer
     module Nodes
       class Identifier < Core
+        include Operators
+
         def name
           fetch(:name).to_s
         end
@@ -28,19 +32,6 @@ module SQL
 
         def qualify?
           options.key?(:qualifier)
-        end
-
-        # this is probably a stupid idea lol
-        def ==(other)
-          value = Nodes::Value.new(input: other, backend: backend)
-
-          operation = Operations::Eql.new(left: self, right: value)
-
-          if other.start_with?("%") && other.end_with?("%")
-            tokens.add(other, value)
-          end
-
-          operation
         end
       end
     end

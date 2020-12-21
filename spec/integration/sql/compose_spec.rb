@@ -45,6 +45,26 @@ RSpec.describe SQL, ".compose" do
       end
     end
 
+    context "with literals in WHERE" do
+      let(:query) do
+        compose {
+          SELECT `"users"."id"`, `"users"."name"`
+          FROM `"users"`
+          WHERE `"users"."name"` == 'Jane'
+        }
+      end
+
+      specify do
+        expect(result).to eql(
+          <<~SQL.strip
+            SELECT "users"."id", "users"."name"
+            FROM "users"
+            WHERE "users"."name" == 'Jane'
+          SQL
+        )
+      end
+    end
+
     context "inline syntax" do
       let(:query) do
         compose {
