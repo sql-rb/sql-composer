@@ -85,6 +85,30 @@ RSpec.describe SQL, ".compose" do
       end
     end
 
+    context "with a dynamic WHERE" do
+      let(:query) do
+        compose { |users|
+          SELECT users.id, users.name
+          FROM users.table
+          WHERE users.name == "%name%"
+        }
+      end
+
+      let(:result) do
+        query.set(name: "Jane").to_s
+      end
+
+      specify do
+        expect(result).to eql(
+          <<~SQL.strip
+            SELECT "users"."id", "users"."name"
+            FROM "users"
+            WHERE "users"."name" == 'Jane'
+          SQL
+        )
+      end
+    end
+
     context "without ORDER" do
       let(:query) do
         compose { |users|

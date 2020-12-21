@@ -1,24 +1,39 @@
 # frozen_string_literal: true
 
+require "sql/composer/statement"
+require "sql/composer/tokens"
+
 module SQL
   module Composer
     class Compiler
+      include ::Dry::Effects::Handler.State(:tokens)
+
       attr_reader :backend
 
       attr_reader :nodes
 
-      def initialize(backend)
+      attr_reader :options
+
+      attr_reader :tokens
+
+      def initialize(backend, options)
         @backend = backend
-        @nodes = []
+        @options = options
+        @nodes = options[:nodes] || []
+        @tokens = options[:tokens]
       end
 
       def call(ast)
-        ast.map { |node| visit(node) }
-        freeze
+        with_tokens(tokens) { ast.map { |node| visit(node) } }
+        Statement.new(compiler: freeze)
+      end
+
+      def with(new_options)
+        self.class.new(backend, options.merge(new_options).merge(nodes: nodes))
       end
 
       def to_s
-        nodes.map(&:to_s).join("\n")
+        with_tokens(tokens) { nodes.map(&:to_s).join("\n") }.last
       end
 
       def visit(node)
