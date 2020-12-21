@@ -59,7 +59,7 @@ RSpec.describe SQL, ".compose" do
           <<~SQL.strip
             SELECT "users"."id", "users"."name"
             FROM "users"
-            WHERE "users"."name" == 'Jane'
+            WHERE "users"."name" = 'Jane'
           SQL
         )
       end
@@ -114,7 +114,7 @@ RSpec.describe SQL, ".compose" do
           <<~SQL.strip
             SELECT "users"."id", "users"."name"
             FROM "users"
-            WHERE "users"."name" == 'Jane'
+            WHERE "users"."name" = 'Jane'
           SQL
         )
       end
@@ -134,7 +134,7 @@ RSpec.describe SQL, ".compose" do
           <<~SQL.strip
             SELECT "users"."id", "users"."name"
             FROM "users"
-            WHERE ("users"."name" == 'Jane') OR ("users"."name" == 'Jade')
+            WHERE ("users"."name" = 'Jane') OR ("users"."name" = 'Jade')
           SQL
         )
       end
@@ -158,7 +158,7 @@ RSpec.describe SQL, ".compose" do
           <<~SQL.strip
             SELECT "users"."id", "users"."name"
             FROM "users"
-            WHERE "users"."name" == 'Jane'
+            WHERE "users"."name" = 'Jane'
           SQL
         )
       end
@@ -178,7 +178,7 @@ RSpec.describe SQL, ".compose" do
           <<~SQL.strip
             SELECT "users"."id", "users"."name"
             FROM "users"
-            WHERE "users"."name" == 'Jane'
+            WHERE "users"."name" = 'Jane'
           SQL
         )
       end
@@ -199,7 +199,7 @@ RSpec.describe SQL, ".compose" do
           <<~SQL.strip
             SELECT "users"."id", "users"."name"
             FROM "users"
-            WHERE "users"."name" == 'Jane'
+            WHERE "users"."name" = 'Jane'
             ORDER BY "users"."id" DESC
           SQL
         )
