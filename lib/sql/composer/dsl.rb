@@ -27,6 +27,10 @@ module SQL
         end
       end
 
+      def inspect
+        "#<SQL::Compose::DSL ast=#{ast.inspect}>"
+      end
+
       def call
         compiler = Compiler.new(options.fetch(:backend), tokens: tokens)
         compiler.(ast)
