@@ -19,7 +19,7 @@ RSpec.describe SQL, ".compose" do
   end
 
   def compose(&block)
-    SQL.compose(backend: :postgres, args: UsersRelation.new, &block)
+    SQL.compose(args: UsersRelation.new, &block)
   end
 
   let(:result) do
