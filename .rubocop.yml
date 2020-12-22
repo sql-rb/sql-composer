@@ -11,6 +11,9 @@ Style/StringLiterals:
 Style/AccessModifierDeclarations:
   Enabled: false
 
+Style/AccessorGrouping:
+  Enabled: false
+
 Style/BlockDelimiters:
   Enabled: false
 

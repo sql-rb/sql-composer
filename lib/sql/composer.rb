@@ -19,7 +19,7 @@ module SQL
 
       class Postgres
         def quote(identifier)
-          %("#{identifier.to_s}")
+          %("#{identifier}")
         end
 
         def escape(input)
