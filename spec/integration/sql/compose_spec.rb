@@ -37,7 +37,7 @@ RSpec.describe SQL, ".compose" do
 
       specify do
         expect(result).to eql(
-          <<~SQL.strip
+          <<~SQL.strip.gsub("\n", " ")
             SELECT "users"."id", "users"."name"
             FROM "users"
           SQL
@@ -56,7 +56,7 @@ RSpec.describe SQL, ".compose" do
 
       specify do
         expect(result).to eql(
-          <<~SQL.strip
+          <<~SQL.strip.gsub("\n", " ")
             SELECT "users"."id", "users"."name"
             FROM "users"
             WHERE "users"."name" = 'Jane'
@@ -74,7 +74,7 @@ RSpec.describe SQL, ".compose" do
 
       specify do
         expect(result).to eql(
-          <<~SQL.strip
+          <<~SQL.strip.gsub("\n", " ")
             SELECT "users"."id", "users"."name"
             FROM "users"
           SQL
@@ -92,7 +92,7 @@ RSpec.describe SQL, ".compose" do
 
       specify do
         expect(result.to_s).to eql(
-          <<~SQL.strip
+          <<~SQL.strip.gsub("\n", " ")
             SELECT "users"."id", "users"."name"
             FROM "users"
           SQL
@@ -111,7 +111,7 @@ RSpec.describe SQL, ".compose" do
 
       specify do
         expect(result).to eql(
-          <<~SQL.strip
+          <<~SQL.strip.gsub("\n", " ")
             SELECT "users"."id", "users"."name"
             FROM "users"
             WHERE "users"."name" = 'Jane'
@@ -131,7 +131,7 @@ RSpec.describe SQL, ".compose" do
 
       specify do
         expect(result).to eql(
-          <<~SQL.strip
+          <<~SQL.strip.gsub("\n", " ")
             SELECT "users"."id", "users"."name"
             FROM "users"
             WHERE ("users"."name" = 'Jane') OR ("users"."name" = 'Jade')
@@ -155,7 +155,7 @@ RSpec.describe SQL, ".compose" do
 
       specify do
         expect(result).to eql(
-          <<~SQL.strip
+          <<~SQL.strip.gsub("\n", " ")
             SELECT "users"."id", "users"."name"
             FROM "users"
             WHERE "users"."name" = 'Jane'
@@ -175,7 +175,7 @@ RSpec.describe SQL, ".compose" do
 
       specify do
         expect(result).to eql(
-          <<~SQL.strip
+          <<~SQL.strip.gsub("\n", " ")
             SELECT "users"."id", "users"."name"
             FROM "users"
             WHERE "users"."name" = 'Jane'
@@ -196,7 +196,7 @@ RSpec.describe SQL, ".compose" do
 
       specify do
         expect(result).to eql(
-          <<~SQL.strip
+          <<~SQL.strip.gsub("\n", " ")
             SELECT "users"."id", "users"."name"
             FROM "users"
             WHERE "users"."name" = 'Jane'

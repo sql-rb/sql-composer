@@ -34,7 +34,7 @@ module SQL
       end
 
       def to_s
-        with_tokens(tokens) { nodes.map(&:to_s).join("\n") }.last
+        with_tokens(tokens) { nodes.map(&:to_s).join(" ") }.last
       end
 
       def visit(node)
