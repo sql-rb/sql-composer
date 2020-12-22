@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sql/composer/parenthesized"
+
 module SQL
   module Composer
     class Statement
@@ -13,6 +15,27 @@ module SQL
 
       def each(&block)
         nodes.each(&block)
+      end
+
+      def append_to(type, *args, &block)
+        node = by_type(type).append(*args, &block)
+        rewrite(node)
+      end
+
+      def rewrite(node)
+        self.class.new(compiler: compiler.rewrite(node))
+      end
+
+      def by_type(type)
+        detect { |n| n.type.equal?(type) }
+      end
+
+      def in_parens
+        Parenthesized.new(self)
+      end
+
+      def empty?
+        nodes.empty?
       end
 
       def set(values)

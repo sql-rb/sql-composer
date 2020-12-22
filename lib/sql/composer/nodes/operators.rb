@@ -12,9 +12,7 @@ module SQL
 
           operation = Operations::Eql.new(left: self, right: value)
 
-          if other.start_with?("%") && other.end_with?("%")
-            tokens.add(other, value)
-          end
+          tokens.add(other, value) if token?(other)
 
           operation
         end
@@ -25,6 +23,10 @@ module SQL
 
         def desc
           Operations::Desc.new(self)
+        end
+
+        def token?(other)
+          other.is_a?(String) && (other.start_with?("%") && other.end_with?("%"))
         end
       end
     end

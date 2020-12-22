@@ -29,7 +29,7 @@ RSpec.describe SQL, ".compose" do
         compose {
           SELECT `"users"."id"`, `"users"."name"`
           FROM `"users"`
-          WHERE `"users"."name"` == 'Jane'
+          WHERE `"users"."name"` == "Jane"
         }
       end
 
@@ -182,6 +182,147 @@ RSpec.describe SQL, ".compose" do
             ORDER BY "users"."id" DESC
           SQL
         )
+      end
+    end
+  end
+
+  describe "extending existing SQL" do
+    context "SELECT" do
+      let(:source_query) do
+        compose { SELECT(`id`, `name`).FROM(`users`) }
+      end
+
+      context "with args" do
+        let(:query) do
+          source_query.append_to(:select, new_identifier).to_s
+        end
+
+        describe "appending to SELECT using a symbol" do
+          let(:new_identifier) { :title }
+
+          it "returns a new SQL statement" do
+            expect(result).to eql(
+              <<~SQL.strip.gsub("\n", " ")
+                SELECT id, name, title
+                FROM users
+              SQL
+            )
+          end
+        end
+
+        describe "appending to SELECT using a string" do
+          let(:new_identifier) { "title" }
+
+          it "returns a new SQL statement" do
+            expect(result).to eql(
+              <<~SQL.strip.gsub("\n", " ")
+                SELECT id, name, title
+                FROM users
+              SQL
+            )
+          end
+        end
+      end
+
+      context "with a block" do
+        describe "appending to SELECT using a sub-select" do
+          let(:query) do
+            source_query.append_to(:select) { SELECT(`title`).FROM(`posts`) }.to_s
+          end
+
+          it "returns a new SQL statement" do
+            expect(result).to eql(
+              <<~SQL.strip.gsub("\n", " ")
+                SELECT id, name, (SELECT title FROM posts)
+                FROM users
+              SQL
+            )
+          end
+        end
+      end
+    end
+
+    context "WHERE" do
+      let(:source_query) do
+        compose { SELECT(`id`, `name`).FROM(`users`).WHERE(`id` == 1) }
+      end
+
+      context "with a hash" do
+        let(:query) do
+          source_query.append_to(:where, name: 'Jane').to_s
+        end
+
+        describe "append_to" do
+          it "returns a new SQL statement" do
+            expect(result).to eql(
+              <<~SQL.strip.gsub("\n", " ")
+                SELECT id, name
+                FROM users
+                WHERE id = 1 AND name = 'Jane'
+              SQL
+            )
+          end
+        end
+      end
+
+      context "with a block" do
+        let(:query) do
+          source_query.append_to(:where) { WHERE(`name` == 'Jane') }.to_s
+        end
+
+        describe "append_to" do
+          it "returns a new SQL statement" do
+            expect(result).to eql(
+              <<~SQL.strip.gsub("\n", " ")
+                SELECT id, name
+                FROM users
+                WHERE id = 1 AND name = 'Jane'
+              SQL
+            )
+          end
+        end
+      end
+    end
+
+    context "ORDER" do
+      let(:source_query) do
+        compose { SELECT(`id`, `name`).FROM(`users`).ORDER(`id`.desc) }
+      end
+
+      context "with a hash" do
+        let(:query) do
+          source_query.append_to(:order, name: :asc).to_s
+        end
+
+        describe "append_to" do
+          it "returns a new SQL statement" do
+            expect(result).to eql(
+              <<~SQL.strip.gsub("\n", " ")
+                SELECT id, name
+                FROM users
+                ORDER BY id DESC, name ASC
+              SQL
+            )
+          end
+        end
+      end
+
+      context "with a block" do
+        let(:query) do
+          source_query.append_to(:order) { ORDER(`name`.asc) }.to_s
+        end
+
+        describe "append_to" do
+          it "returns a new SQL statement" do
+            expect(result).to eql(
+              <<~SQL.strip.gsub("\n", " ")
+                SELECT id, name
+                FROM users
+                ORDER BY id DESC, name ASC
+              SQL
+            )
+          end
+        end
       end
     end
   end

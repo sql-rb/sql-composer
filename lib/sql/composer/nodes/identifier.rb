@@ -3,7 +3,6 @@
 require "sql/composer/nodes/core"
 require "sql/composer/nodes/operators"
 
-
 module SQL
   module Composer
     module Nodes

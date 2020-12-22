@@ -26,6 +26,8 @@ module SQL
           case input
           when String
             %('#{input}')
+          when Integer
+            input
           else
             raise InputTypeNotSupported, input.class
           end
