@@ -326,4 +326,23 @@ RSpec.describe SQL, ".compose" do
       end
     end
   end
+
+  describe "aliasing nodes" do
+    let(:result) { query.to_s }
+
+    describe "SELECT" do
+      let(:query) do
+        compose { SELECT(`id`, `user_name`.AS(`name`)).FROM(`users`) }
+      end
+
+      specify do
+        expect(result).to eql(
+          <<~SQL.strip.gsub("\n", " ")
+            SELECT id, user_name AS name
+            FROM users
+          SQL
+        )
+      end
+    end
+  end
 end
