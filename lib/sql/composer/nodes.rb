@@ -2,6 +2,8 @@
 
 require "sql/composer/nodes/literal"
 require "sql/composer/nodes/identifier"
+require "sql/composer/nodes/aliased"
+require "sql/composer/nodes/qualified"
 require "sql/composer/nodes/select"
 require "sql/composer/nodes/from"
 require "sql/composer/nodes/where"

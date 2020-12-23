@@ -10,6 +10,10 @@ module SQL
 
         track true
 
+        def self.args_ast(*args)
+          args.map(&:to_ast)
+        end
+
         def identifiers
           fetch(:identifiers)
         end
@@ -38,6 +42,10 @@ module SQL
 
         def to_s
           "SELECT #{identifiers.map(&:to_s).join(', ')}"
+        end
+
+        def to_ast
+          [:select, identifiers.map(&:to_ast)]
         end
       end
     end

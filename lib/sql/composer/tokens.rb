@@ -7,9 +7,14 @@ module SQL
 
       attr_reader :data
 
-      def initialize(data: {}, counter: 0)
-        @data = data
-        @counter = counter
+      attr_reader :counter
+
+      attr_reader :options
+
+      def initialize(options = {})
+        @data = options[:data] || {}
+        @counter = options[:counter] || 0
+        @options = options.merge(data: data, counter: counter)
       end
 
       def add(key, node)
@@ -23,8 +28,12 @@ module SQL
         self
       end
 
-      def new
-        self.class.new(data: data.dup, counter: @counter)
+      def new(new_options = {})
+        self.class.new(options.merge(new_options))
+      end
+
+      def merge(other)
+        new(data: data.merge(other.data), counter: (counter + other.counter))
       end
 
       def value(id, default)

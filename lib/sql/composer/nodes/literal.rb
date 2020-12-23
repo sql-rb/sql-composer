@@ -9,12 +9,16 @@ module SQL
     module Nodes
       class Literal < Core
         include Operators
-        include Aliasable
+        prepend Aliasable
 
         def value
           fetch(:value)
         end
         alias_method :to_s, :value
+
+        def to_ast
+          [:literal, value]
+        end
       end
     end
   end

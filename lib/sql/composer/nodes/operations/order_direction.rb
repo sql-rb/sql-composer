@@ -14,6 +14,10 @@ module SQL
           def to_s
             "#{source.to_s} #{direction}"
           end
+
+          def to_ast
+            [:order_direction, [source.to_ast, direction]]
+          end
         end
 
         class Asc < OrderDirection
