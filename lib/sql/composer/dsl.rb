@@ -28,17 +28,24 @@ module SQL
       end
 
       def inspect
-        "#<SQL::Compose::DSL ast=#{ast.inspect}>"
+        "#<SQL::Composer::DSL ast=#{ast.inspect}>"
+      end
+
+      def new(&block)
+        ::SQL::Composer::DSL.new(options.merge(tokens: nil), &block)
       end
 
       def call
-        compiler = Compiler.new(options.fetch(:backend), tokens: tokens)
+        compiler = Compiler.new(options.fetch(:backend), dsl: self, tokens: tokens)
         compiler.(ast)
       end
 
-      def `(value)
-        Nodes::Literal.new(value: value, backend: options[:backend])
+      def lit(value)
+        with_tokens(tokens) {
+          Nodes::Literal.new(value: value, backend: options[:backend])
+        }.last
       end
+      alias_method :`, :lit
 
       private
 

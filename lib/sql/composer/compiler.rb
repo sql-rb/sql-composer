@@ -17,16 +17,24 @@ module SQL
 
       attr_reader :tokens
 
+      attr_reader :dsl
+
       def initialize(backend, options)
         @backend = backend
         @options = options
         @nodes = options[:nodes] || []
         @tokens = options[:tokens]
+        @dsl = options[:dsl]
       end
 
       def call(ast)
         with_tokens(tokens) { ast.map { |node| visit(node) } }
         Statement.new(compiler: freeze)
+      end
+
+      def rewrite(node)
+        new_nodes = nodes.map { |n| n.id.equal?(node.id) ? node : n }
+        self.class.new(backend, options.merge(nodes: new_nodes))
       end
 
       def with(new_options)
@@ -67,7 +75,7 @@ module SQL
       private
 
       def add_node(klass, options)
-        nodes << klass.new(options.update(backend: backend))
+        nodes << klass.new(options.update(backend: backend, dsl: dsl))
         self
       end
     end
