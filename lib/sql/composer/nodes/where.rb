@@ -36,6 +36,10 @@ module SQL
           with(operations: operations + new_operations)
         end
 
+        def merge(other)
+          with(operations: operations + other.operations)
+        end
+
         def to_ast
           [:where, operations.map(&:to_ast)]
         end
