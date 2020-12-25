@@ -14,6 +14,10 @@ module SQL
           id
         end
       end
+
+      def sql_literal(value)
+        Nodes::Literal.new(value: value)
+      end
     end
   end
 end

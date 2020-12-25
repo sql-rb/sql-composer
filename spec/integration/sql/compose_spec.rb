@@ -339,36 +339,14 @@ RSpec.describe SQL, ".compose" do
     describe "SELECT" do
       context "with args" do
         let(:query) do
-          source_query.append(:where, name: 'Jane')
+          source_query.append(:select, sql_literal(:email))
         end
 
         specify do
           expect(result).to eql(
             <<~SQL.strip.gsub("\n", " ")
-              SELECT id, name
+              SELECT id, name, email
               FROM users
-              WHERE name = 'Jane'
-            SQL
-          )
-        end
-      end
-
-      context "with args when :order is set already" do
-        let(:source_query) do
-          compose { SELECT(`id`, `name`).FROM(`users`).ORDER(`name`.asc) }
-        end
-
-        let(:query) do
-          source_query.append(:where, name: 'Jane')
-        end
-
-        specify do
-          expect(result).to eql(
-            <<~SQL.strip.gsub("\n", " ")
-              SELECT id, name
-              FROM users
-              WHERE name = 'Jane'
-              ORDER BY name ASC
             SQL
           )
         end
@@ -376,15 +354,14 @@ RSpec.describe SQL, ".compose" do
 
       context "with a block" do
         let(:query) do
-          source_query.append(:where) { WHERE(`name` == 'Jane') }
+          source_query.append(:select) { SELECT(`email`) }
         end
 
         specify do
           expect(result).to eql(
             <<~SQL.strip.gsub("\n", " ")
-              SELECT id, name
+              SELECT id, name, email
               FROM users
-              WHERE name = 'Jane'
             SQL
           )
         end

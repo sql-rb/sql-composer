@@ -36,6 +36,10 @@ module SQL
           with(identifiers: new_identifiers)
         end
 
+        def merge(other)
+          with(identifiers: other.identifiers)
+        end
+
         def with(new_options)
           super(identifiers: identifiers + new_options[:identifiers])
         end
