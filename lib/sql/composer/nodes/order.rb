@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sql/composer/nodes/core"
+require "sql/composer/nodes/literal"
 
 module SQL
   module Composer
@@ -9,6 +10,17 @@ module SQL
         track true
 
         type :order
+
+        def self.args_ast(*args)
+          args.map { |arg|
+            case arg
+            when Hash
+              arg.map { |key, value| Literal.new(value: key).public_send(value) }.map(&:to_ast)
+            else
+              [arg.to_ast]
+            end
+          }.flatten(1)
+        end
 
         def operations
           fetch(:operations)
@@ -26,6 +38,10 @@ module SQL
 
         def to_s
           "ORDER BY #{operations.map(&:to_s).join(', ')}"
+        end
+
+        def to_ast
+          [:order, operations.map(&:to_ast)]
         end
       end
     end

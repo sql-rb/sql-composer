@@ -14,7 +14,11 @@ module SQL
         end
 
         def to_s
-          qualify? ? [qualifier, quote(name)].map(&:to_s).join(".") : quote(name)
+          quote(name)
+        end
+
+        def to_ast
+          [:identifier, name]
         end
 
         def asc
@@ -23,14 +27,6 @@ module SQL
 
         def desc
           Operations::Desc.new(self)
-        end
-
-        def qualifier
-          fetch(:qualifier)
-        end
-
-        def qualify?
-          options.key?(:qualifier)
         end
       end
     end

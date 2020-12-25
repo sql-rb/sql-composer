@@ -19,20 +19,24 @@ module SQL
 
       def initialize(options, &block)
         @options = options
-        @ast = []
+        @ast = options[:ast] || []
         @tokens = options[:tokens] || Tokens.new
 
-        with_tokens(tokens) do
+        with_tokens do
           instance_exec(*options[:args], &block)
-        end
+        end if block
       end
 
       def inspect
         "#<SQL::Composer::DSL ast=#{ast.inspect}>"
       end
 
-      def new(&block)
-        ::SQL::Composer::DSL.new(options.merge(tokens: nil), &block)
+      def new(new_options = {}, &block)
+        ::SQL::Composer::DSL.new(options.merge(new_options).merge(tokens: nil), &block)
+      end
+
+      def merge(other)
+        new(ast: (ast + other.ast), tokens: tokens.merge(other.tokens))
       end
 
       def call
@@ -41,17 +45,36 @@ module SQL
       end
 
       def lit(value)
-        with_tokens(tokens) {
-          Nodes::Literal.new(value: value, backend: options[:backend])
-        }.last
+        Nodes::Literal.new(value: value, backend: options[:backend])
       end
       alias_method :`, :lit
 
-      private
-
-      def method_missing(name, *args)
-        ast << [name.to_s.downcase, *args]
+      def select(*args)
+        with_tokens { ast << [:select, Nodes::Select.args_ast(*args)] }
         self
+      end
+      alias_method :SELECT, :select
+
+      def where(*args)
+        with_tokens { ast << [:where, Nodes::Where.args_ast(*args)] }
+        self
+      end
+      alias_method :WHERE, :where
+
+      def order(*args)
+        with_tokens { ast << [:order, Nodes::Order.args_ast(*args)] }
+        self
+      end
+      alias_method :ORDER, :order
+
+      def from(identifier)
+        ast << [:from, identifier.to_ast]
+        self
+      end
+      alias_method :FROM, :from
+
+      def with_tokens(&block)
+        super(tokens, &block).last
       end
     end
   end

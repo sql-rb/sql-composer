@@ -23,6 +23,10 @@ module SQL
           def to_s
             "#{left.to_s} = #{right.to_s}"
           end
+
+          def to_ast
+            [:eql, [left.to_ast, right.to_ast]]
+          end
         end
       end
     end

@@ -6,7 +6,13 @@ module SQL
   module Composer
     module NodeHelpers
       def sql_identifier(name, options = {})
-        Nodes::Identifier.new(options.merge(name: name))
+        id = Nodes::Identifier.new(options.merge(name: name))
+
+        if (qualifier = options[:qualifier])
+          Nodes::Qualified.new(left: qualifier, right: id)
+        else
+          id
+        end
       end
     end
   end

@@ -327,6 +327,105 @@ RSpec.describe SQL, ".compose" do
     end
   end
 
+  describe "appending new nodes" do
+    let(:source_query) do
+      compose { SELECT(`id`, `name`).FROM(`users`) }
+    end
+
+    let(:result) do
+      query.to_s
+    end
+
+    describe "SELECT" do
+      context "with args" do
+        let(:query) do
+          source_query.append(:where, name: 'Jane')
+        end
+
+        specify do
+          expect(result).to eql(
+            <<~SQL.strip.gsub("\n", " ")
+              SELECT id, name
+              FROM users
+              WHERE name = 'Jane'
+            SQL
+          )
+        end
+      end
+
+      context "with args when :order is set already" do
+        let(:source_query) do
+          compose { SELECT(`id`, `name`).FROM(`users`).ORDER(`name`.asc) }
+        end
+
+        let(:query) do
+          source_query.append(:where, name: 'Jane')
+        end
+
+        specify do
+          expect(result).to eql(
+            <<~SQL.strip.gsub("\n", " ")
+              SELECT id, name
+              FROM users
+              WHERE name = 'Jane'
+              ORDER BY name ASC
+            SQL
+          )
+        end
+      end
+
+      context "with a block" do
+        let(:query) do
+          source_query.append(:where) { WHERE(`name` == 'Jane') }
+        end
+
+        specify do
+          expect(result).to eql(
+            <<~SQL.strip.gsub("\n", " ")
+              SELECT id, name
+              FROM users
+              WHERE name = 'Jane'
+            SQL
+          )
+        end
+      end
+    end
+
+    describe "ORDER" do
+      context "with args" do
+        let(:query) do
+          source_query.append(:order, name: :asc)
+        end
+
+        specify do
+          expect(result).to eql(
+            <<~SQL.strip.gsub("\n", " ")
+              SELECT id, name
+              FROM users
+              ORDER BY name ASC
+            SQL
+          )
+        end
+      end
+
+      context "with a block" do
+        let(:query) do
+          source_query.append(:order) { ORDER(`name`.asc) }
+        end
+
+        specify do
+          expect(result).to eql(
+            <<~SQL.strip.gsub("\n", " ")
+              SELECT id, name
+              FROM users
+              ORDER BY name ASC
+            SQL
+          )
+        end
+      end
+    end
+  end
+
   describe "aliasing nodes" do
     let(:result) { query.to_s }
 

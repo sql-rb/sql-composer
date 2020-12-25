@@ -13,6 +13,10 @@ module SQL
         def to_s
           backend.escape(input)
         end
+
+        def to_ast
+          [:value, [input.class.name.downcase, input]]
+        end
       end
     end
   end
