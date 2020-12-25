@@ -424,6 +424,40 @@ RSpec.describe SQL, ".compose" do
         end
       end
     end
+
+    describe "WHERE" do
+      context "with args" do
+        let(:query) do
+          source_query.append(:where, name: "Jane")
+        end
+
+        specify do
+          expect(result).to eql(
+            <<~SQL.strip.gsub("\n", " ")
+              SELECT id, name
+              FROM users
+              WHERE name = 'Jane'
+            SQL
+          )
+        end
+      end
+
+      context "with a block" do
+        let(:query) do
+          source_query.append(:order) { WHERE(`name` == "Jane") }
+        end
+
+        specify do
+          expect(result).to eql(
+            <<~SQL.strip.gsub("\n", " ")
+              SELECT id, name
+              FROM users
+              WHERE name = 'Jane'
+            SQL
+          )
+        end
+      end
+    end
   end
 
   describe "aliasing nodes" do
