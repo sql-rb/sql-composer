@@ -442,6 +442,22 @@ RSpec.describe SQL, ".compose" do
         end
       end
 
+      context "with existing :where" do
+        let(:query) do
+          source_query.append(:where, name: "Jane").append(:where, id: 1)
+        end
+
+        specify do
+          expect(result).to eql(
+            <<~SQL.strip.gsub("\n", " ")
+              SELECT id, name
+              FROM users
+              WHERE name = 'Jane' AND id = 1
+            SQL
+          )
+        end
+      end
+
       context "with a block" do
         let(:query) do
           source_query.append(:order) { WHERE(`name` == "Jane") }

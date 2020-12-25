@@ -20,9 +20,9 @@ module SQL
       def append(type, *args, &block)
         new_dsl =
           if block
-            dsl.new(&block)
+            dsl.new(ast: [], &block)
           else
-            dsl.new.__send__(type, *args)
+            dsl.new(ast: []).__send__(type, *args)
           end
 
         left = self
